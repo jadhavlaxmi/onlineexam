@@ -352,7 +352,8 @@ public class StudentDetails extends javax.swing.JFrame {
              ps.setString(8, marks);
              ps.executeUpdate();
              setVisible(false);
-            new InstructionStudent(rollno).setVisible(true);
+      new InstructionStudent(rollno).setVisible(true);
+            //new QuizExamStudent(rollno).setVisible(true);
              JOptionPane.showMessageDialog(null, "roll no"+rollno+"you can start the exam");
             
         }catch(Exception e){

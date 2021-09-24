@@ -32,13 +32,83 @@ public class QuizExamStudent extends javax.swing.JFrame {
     public int marks=0;
     
     public void answerCheck(){
+        String studentAnswer="null";
+       if(jRadioButton1.isSelected()){
+           studentAnswer=jRadioButton1.getText();
+       }
+       else if(jRadioButton2.isSelected()){
+           studentAnswer=jRadioButton2.getText();
+       }
+       else if(jRadioButton3.isSelected()){
+           studentAnswer=jRadioButton3.getText();
+       }
+       else if(jRadioButton4.isSelected()){
+           studentAnswer=jRadioButton4.getText();
+       }
+       //match answer
+       if(studentAnswer.equals(answer)){
+           marks++;
+           String marks1=String.valueOf(marks);
+           jLabel6.setText(marks1);
+       }
+       //change que no
+       int questionId1=Integer.parseInt(questionId);
+       questionId1++;
+       questionId=String.valueOf(questionId1);
+       //clear radio btn
+       jRadioButton1.setSelected(false);
+        jRadioButton2.setSelected(false);
+         jRadioButton3.setSelected(false);
+          jRadioButton4.setSelected(false);
+       //last que hide next btn
+       if(questionId.equals("10")){
+           jButton1.setVisible(false);
+       }
         
     }
-    public void question(){
+            
         
+    
+    public void question(){
+         try {
+            
+        Connection con=ConnectionProvider.getCon();
+       Statement st;
+        st = con.createStatement();
+      
+        ResultSet rs1=st.executeQuery("select * from quizems.question where id='"+questionId+"'");
+        while(rs1.next()){
+            jLabel15.setText(rs1.getString(1));
+            jLabel18.setText(rs1.getString(2));
+            jRadioButton1.setText(rs1.getString(3));
+            jRadioButton2.setText(rs1.getString(4));
+            jRadioButton3.setText(rs1.getString(5));
+            jRadioButton4.setText(rs1.getString(6));
+            answer=rs1.getString(7);
+        }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, ex);
+            
+        }
     }
     public void submit(){
-        
+        String rollno=jLabel9.getText();
+        answerCheck();
+         try {
+            
+        Connection con=ConnectionProvider.getCon();
+       Statement st;
+        st = con.createStatement();
+        st.executeUpdate("update student set marks='"+marks+"' where"
+                + "rollno='"+rollno+"'");
+        String marks1=String.valueOf(marks);
+        JOptionPane.showMessageDialog(null,"your score : "+marks1);
+         }catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, ex);
+            
+        }
     }
     
     
@@ -52,7 +122,7 @@ public class QuizExamStudent extends javax.swing.JFrame {
     Timer time;
 
     QuizExamStudent(String rollno) {
-      jLabel9.setText(rollno);
+      this.jLabel9.setText(rollno);
         try {
             
         Connection con=ConnectionProvider.getCon();
@@ -61,6 +131,7 @@ public class QuizExamStudent extends javax.swing.JFrame {
             st = con.createStatement();
         
         ResultSet rs=st.executeQuery("select * from quizems.student where rollno='"+rollno+"'");
+            System.out.println(rs.getRow());
         while(rs.next()){
            name1.setText(rs.getString(2));
         }
@@ -250,6 +321,11 @@ public class QuizExamStudent extends javax.swing.JFrame {
 
         jRadioButton1.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jRadioButton1.setText("jRadioButton1");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
 
         jRadioButton2.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jRadioButton2.setText("jRadioButton2");
@@ -270,6 +346,11 @@ public class QuizExamStudent extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Agency FB", 1, 20)); // NOI18N
         jButton2.setText("Submit");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 0, 0));
@@ -381,8 +462,44 @@ public class QuizExamStudent extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        answerCheck();
+        question();
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        int a=JOptionPane.showConfirmDialog(null, "Do you really want to submit","select",
+                JOptionPane.YES_NO_OPTION);
+        if(a==0){
+            answerCheck();
+            submit();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        // TODO add your handling code here:
+        if(jRadioButton1.isSelected()){
+            jRadioButton2.setSelected(false);
+             jRadioButton3.setSelected(false);
+              jRadioButton4.setSelected(false);
+        }
+         if(jRadioButton2.isSelected()){
+            jRadioButton1.setSelected(false);
+             jRadioButton3.setSelected(false);
+              jRadioButton4.setSelected(false);
+        }
+          if(jRadioButton3.isSelected()){
+            jRadioButton2.setSelected(false);
+             jRadioButton1.setSelected(false);
+              jRadioButton4.setSelected(false);
+        }
+           if(jRadioButton4.isSelected()){
+            jRadioButton2.setSelected(false);
+             jRadioButton3.setSelected(false);
+              jRadioButton1.setSelected(false);
+        }
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     /**
      * @param args the command line arguments

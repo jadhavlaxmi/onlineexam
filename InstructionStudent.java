@@ -1,5 +1,21 @@
 
 import javax.swing.JOptionPane;
+import java.awt.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import java.awt.Event;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
+import javax.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -33,7 +49,7 @@ public class InstructionStudent extends javax.swing.JFrame {
         initComponents();
          jTextArea1.setEditable(false);
         //JOptionPane.showMessageDialog(null, rollno1);
-          rollno=rollno1;
+         this.rollno=rollno1;
     } 
    
       
