@@ -37,7 +37,7 @@ public class StudentDetails extends javax.swing.JFrame {
     public StudentDetails() {
         initComponents();
         jTextArea1.setEditable(false);
-        SimpleDateFormat dformat=new SimpleDateFormat("dd-mm-yyyy");
+       // SimpleDateFormat dformat=new SimpleDateFormat("dd-mm-yyyy");
 //       Date date = new Date();
 //        jLabel4.setText(dformat.format(date));
         

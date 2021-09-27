@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -30,6 +31,7 @@ public class QuizExamStudent extends javax.swing.JFrame {
     public int min=0;
     public int sec=0;
     public int marks=0;
+   
     
     public void answerCheck(){
         String studentAnswer="null";
@@ -47,9 +49,9 @@ public class QuizExamStudent extends javax.swing.JFrame {
        }
        //match answer
        if(studentAnswer.equals(answer)){
-           marks++;
+           marks=marks+1;
            String marks1=String.valueOf(marks);
-           jLabel6.setText(marks1);
+           jLabel16.setText(marks1);
        }
        //change que no
        int questionId1=Integer.parseInt(questionId);
@@ -93,17 +95,19 @@ public class QuizExamStudent extends javax.swing.JFrame {
         }
     }
     public void submit(){
-        String rollno=jLabel9.getText();
+      
+      String rollno=jLabel9.getText();
         answerCheck();
          try {
             
         Connection con=ConnectionProvider.getCon();
        Statement st;
         st = con.createStatement();
-        st.executeUpdate("update student set marks='"+marks+"' where"
-                + "rollno='"+rollno+"'");
+        st.executeUpdate("update quizems.student set marks='"+marks+"' where rollno='"+rollno+"' ");
         String marks1=String.valueOf(marks);
-        JOptionPane.showMessageDialog(null,"your score : "+marks1);
+        //JOptionPane.showMessageDialog(null,"your score : "+marks1);
+             setVisible(false);
+             new successfullySubmitted(marks1).setVisible(true);
          }catch (SQLException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, ex);
@@ -114,15 +118,17 @@ public class QuizExamStudent extends javax.swing.JFrame {
     
     public QuizExamStudent() {
         initComponents();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
-   LocalDateTime now = LocalDateTime.now();  
-   System.out.println(dtf.format(now)); 
-   jLabel3.setText(dtf.format(now));
     }
     Timer time;
 
-    QuizExamStudent(String rollno) {
-      this.jLabel9.setText(rollno);
+    public QuizExamStudent(String rollno) {
+        initComponents();
+         
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+   LocalDateTime now = LocalDateTime.now();  
+   System.out.println(dtf.format(now)); 
+   datelabel.setText(dtf.format(now));
+      jLabel9.setText(rollno);
         try {
             
         Connection con=ConnectionProvider.getCon();
@@ -133,17 +139,17 @@ public class QuizExamStudent extends javax.swing.JFrame {
         ResultSet rs=st.executeQuery("select * from quizems.student where rollno='"+rollno+"'");
             System.out.println(rs.getRow());
         while(rs.next()){
-           name1.setText(rs.getString(2));
+           name1.setText(rs.getString(2));//getting name in label name1
         }
         ResultSet rs1=st.executeQuery("select * from quizems.question where id='"+questionId+"'");
         while(rs1.next()){
-            jLabel15.setText(rs1.getString(1));
-            jLabel18.setText(rs1.getString(2));
+            jLabel15.setText(rs1.getString(1));//getting id
+            jLabel18.setText(rs1.getString(2));//question
             jRadioButton1.setText(rs1.getString(3));
             jRadioButton2.setText(rs1.getString(4));
             jRadioButton3.setText(rs1.getString(5));
             jRadioButton4.setText(rs1.getString(6));
-            answer=rs1.getString(7);
+            answer=rs1.getString(7);//answer
         }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -154,7 +160,7 @@ public class QuizExamStudent extends javax.swing.JFrame {
        time=new Timer(1000,new ActionListener(){
           @Override
           public void actionPerformed(ActionEvent e) {
-             jLabel17.setText(String.valueOf(min));
+             jLabel7.setText(String.valueOf(min));
              jLabel10.setText(String.valueOf(sec));
              if(sec==60){
                  sec=0;
@@ -165,13 +171,11 @@ public class QuizExamStudent extends javax.swing.JFrame {
                      submit();
                  }
              }
-             
+             sec++;
           }
            
        });
        time.start();
-        
-       
     }
 
     /**
@@ -186,8 +190,8 @@ public class QuizExamStudent extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        datelabel = new javax.swing.JLabel();
+        jLabel44 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -223,11 +227,11 @@ public class QuizExamStudent extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Agency FB", 1, 20)); // NOI18N
         jLabel2.setText("Date :");
 
-        jLabel3.setFont(new java.awt.Font("Agency FB", 1, 20)); // NOI18N
-        jLabel3.setText("jLabel3");
+        datelabel.setFont(new java.awt.Font("Agency FB", 1, 20)); // NOI18N
+        datelabel.setText("jLabel3");
 
-        jLabel4.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
-        jLabel4.setText("Total Time");
+        jLabel44.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
+        jLabel44.setText("Total Time");
 
         jLabel5.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
         jLabel5.setText("Timer");
@@ -369,10 +373,10 @@ public class QuizExamStudent extends javax.swing.JFrame {
                         .addGap(429, 429, 429)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel3)
+                        .addComponent(datelabel)
                         .addGap(253, 253, 253)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel44, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(28, 28, 28)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -408,11 +412,11 @@ public class QuizExamStudent extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel3)))
+                            .addComponent(datelabel)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
+                            .addComponent(jLabel44)
                             .addComponent(jLabel6))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -537,6 +541,7 @@ public class QuizExamStudent extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel datelabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -549,8 +554,7 @@ public class QuizExamStudent extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
